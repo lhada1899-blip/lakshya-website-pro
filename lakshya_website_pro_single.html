@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lakshya Website Pro — Study Buddy</title>
+<meta name="theme-color" content="#071129">
+<link rel="manifest" href="manifest.json" id="manifest-link">
+<style>
+:root{
+  --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#06b6d4; --accent2:#f59e0b; --success:#10b981; --danger:#ef4444;
+}
+:root.light{
+  --bg:#f8fafc; --card:#ffffff; --muted:#475569; --accent:#2563eb; --accent2:#f59e0b; --success:#059669; --danger:#dc2626;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--text,#e6eef8);background:linear-gradient(180deg,#071129 0%, #071b2f 60%);-webkit-font-smoothing:antialiased}
+.light html, body { background:var(--bg); color:#0b1220; }
+.app{max-width:1100px;margin:24px auto;padding:18px}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#031025;box-shadow:0 6px 24px rgba(6,182,212,0.12)}
+.title{font-size:20px;font-weight:700;color:var(--muted)}
+.nav{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tab{background:transparent;border:0;color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600;transition:all .18s ease}
+.tab.active{color:white;background:linear-gradient(90deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));box-shadow:0 6px 18px rgba(6,182,212,0.06)}
+.container{display:grid;grid-template-columns:320px 1fr;gap:16px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+.card.light{background:var(--card);border:1px solid #eef2ff;box-shadow:none}
+.left .search{margin-bottom:10px}
+.input, textarea, select, button{font-family:inherit}
+.input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted)}
+.textarea{width:100%;min-height:120px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:#dbeafe;resize:vertical}
+.btn{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#031025;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+.small{font-size:13px;color:var(--muted)}
+.list{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.item{padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.03)}
+.meta{font-size:13px;color:var(--muted);margin-top:6px}
+.tag{display:inline-block;padding:6px 8px;border-radius:999px;font-size:12px;margin-left:8px}
+.tag.weak{background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.08)}
+.tag.strong{background:rgba(16,185,129,0.08);color:var(--success);border:1px solid rgba(16,185,129,0.06)}
+.footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+.timetable-slot{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.timetable-slot input[type='time']{background:transparent;border:1px solid rgba(255,255,255,0.03);color:#dbeafe;padding:8px;border-radius:8px}
+.icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+.notice{padding:8px;border-radius:8px;background:linear-gradient(90deg,rgba(250,204,21,0.06),rgba(6,182,212,0.03));border:1px solid rgba(255,255,255,0.02);color:#fff;margin-bottom:12px}
+.controls{display:flex;gap:8px;align-items:center}
+.toast{position:fixed;right:18px;bottom:18px;background:#031025;color:#dbeafe;padding:10px 12px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,0.6)}
+.dark-toggle{border:1px solid rgba(255,255,255,0.04);padding:6px;border-radius:8px;color:var(--muted);background:transparent;cursor:pointer}
+@media (max-width:900px){.container{grid-template-columns:1fr;}.nav{display:none}.logo-mark{width:40px;height:40px}.title{font-size:16px}}
+.fade{transition:all .18s ease;opacity:0;transform:translateY(6px)}
+.fade.show{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="header">
+    <div class="logo">
+      <div class="logo-mark">L</div>
+      <div>
+        <div class="title">Lakshya Website Pro</div>
+        <div class="small">Smart Study — Notes, Revision & Timetable</div>
+      </div>
+    </div>
+    <div class="nav" role="tablist" aria-label="Main Navigation">
+      <button class="tab active" data-page="home">Home</button>
+      <button class="tab" data-page="notes">Notes</button>
+      <button class="tab" data-page="revision">Revision</button>
+      <button class="tab" data-page="timetable">Timetable</button>
+      <button id="themeToggle" class="dark-toggle" title="Toggle theme">Dark/Light</button>
+      <button id="notifyBtn" class="dark-toggle" title="Enable notifications">🔔 Notify</button>
+      <button id="pwaBtn" class="dark-toggle" title="Install as app">Install</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="left">
+      <div class="card card-left">
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="subjectInput" class="input" placeholder="New subject name...">
+          <button id="addSubjectBtn" class="btn">Add</button>
+        </div>
+        <div class="search" style="margin-top:12px">
+          <input id="searchInput" class="input" placeholder="Search notes... (press /)">
+        </div>
+        <div style="margin-top:12px" class="small">Subjects</div>
+        <div id="subjectsList" class="list"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="small">Quick Filters</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="allFilter" class="icon-btn">All</button>
+          <button id="weakFilter" class="icon-btn">🔴 Weak</button>
+          <button id="strongFilter" class="icon-btn">🟢 Strong</button>
+        </div>
+        <div style="margin-top:12px" class="small">Due Today</div>
+        <div id="dueList" class="list"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="small">Export / Import / PDF</div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button id="exportBtn" class="btn">Export JSON</button>
+          <button id="importBtn" class="btn" style="background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)">Import JSON</button>
+          <button id="pdfNotesBtn" class="btn" style="background:linear-gradient(90deg,var(--accent2),var(--accent));">Export Notes → PDF</button>
+          <button id="pdfTimetableBtn" class="btn" style="background:linear-gradient(90deg,var(--accent2),var(--accent));">Export Timetable → PDF</button>
+        </div>
+        <div style="margin-top:8px" class="small">Cloud Backup (optional)</div>
+        <div class="small" style="margin-top:6px">Cloud sync is a future option — see README for steps.</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div id="pageHome" class="card fade show">
+        <div class="notice">Welcome to Lakshya Website Pro — upgraded with PDF export, smart revision scheduling, installable PWA support, local notifications, and theme toggle.</div>
+        <h3 style="margin-top:0">Quick Actions</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" data-goto="notes">Open Notes</button>
+          <button class="btn" data-goto="timetable" style="background:linear-gradient(90deg,var(--accent2),var(--accent));">Open Timetable</button>
+          <button class="btn" data-goto="revision" style="background:linear-gradient(90deg,var(--danger),#ff7a7a);">Today's Revision</button>
+        </div>
+      </div>
+
+      <div id="pageNotes" class="card fade" style="display:none">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <select id="subjectSelect" class="input" style="flex:1"></select>
+          <button id="newNoteBtn" class="btn">+ New Note</button>
+        </div>
+
+        <div id="noteEditor" style="display:none;margin-bottom:12px">
+          <input id="noteTitle" class="input" placeholder="Note title" style="margin-bottom:8px">
+          <textarea id="noteBody" class="textarea" placeholder="Write your note..."></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+            <input id="noteTags" class="input" placeholder="tags,comma" style="flex:1"/>
+            <select id="reviewInterval" class="input"><option value="1">1 day</option><option value="2">2 days</option><option value="4">4 days</option><option value="7">7 days</option></select>
+            <select id="noteStrength" class="input"><option value="normal">Normal</option><option value="weak">Weak</option><option value="strong">Strong</option></select>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button id="saveNoteBtn" class="btn">Save Note</button>
+            <button id="cancelNoteBtn" class="icon-btn">Cancel</button>
+            <button id="pdfSingleNoteBtn" class="icon-btn">PDF</button>
+          </div>
+        </div>
+
+        <div id="notesList" class="list"></div>
+      </div>
+
+      <div id="pageRevision" class="card fade" style="display:none">
+        <h3 style="margin-top:0">Today's Revision</h3>
+        <div id="revisionList" class="list"></div>
+      </div>
+
+      <div id="pageTimetable" class="card fade" style="display:none">
+        <h3 style="margin-top:0">Weekly Timetable</h3>
+        <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap">
+          <button class="icon-btn dayBtn" data-day="0">Mon</button>
+          <button class="icon-btn dayBtn" data-day="1">Tue</button>
+          <button class="icon-btn dayBtn" data-day="2">Wed</button>
+          <button class="icon-btn dayBtn" data-day="3">Thu</button>
+          <button class="icon-btn dayBtn" data-day="4">Fri</button>
+          <button class="icon-btn dayBtn" data-day="5">Sat</button>
+          <button class="icon-btn dayBtn" data-day="6">Sun</button>
+        </div>
+        <div id="slots" style="margin-top:8px"></div>
+        <div style="margin-top:10px"><button id="addSlotBtn" class="btn">+ Add Slot</button></div>
+      </div>
+
+      <div class="footer">Lakshya Website Pro — Local-only. PDF export uses browser Print-to-PDF.</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="display:none" class="toast">Saved</div>
+
+<script>
+/* Lakshya Website Pro: JS with smart revision, PDF via print, PWA install prompt, notifications, dark mode */
+const DB_KEY = 'lakshya_pro_v1';
+let db = { subjects: [], notes: [], timetable: [] };
+const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+function load(){ const raw = localStorage.getItem(DB_KEY); if(raw) try{ db = JSON.parse(raw); }catch(e){ console.error(e); } if(!db.timetable || db.timetable.length!==7) db.timetable = Array.from({length:7}, ()=>[]); }
+function save(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); showToast('Saved'); renderAll(); }
+function todayKey(){ const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+function formatDate(ts){ return ts? new Date(ts).toLocaleDateString(): '—'; }
+function escapeHtml(s){ if(!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(txt){ const t = document.getElementById('toast'); t.textContent = txt; t.style.display='block'; setTimeout(()=> t.style.display='none',1800); }
+
+// PWA install prompt
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredPrompt = e; document.getElementById('pwaBtn').style.display='inline-block'; });
+document.getElementById('pwaBtn').addEventListener('click', async ()=>{ if(deferredPrompt){ deferredPrompt.prompt(); const choice = await deferredPrompt.userChoice; if(choice.outcome === 'accepted'){ alert('App installed'); } deferredPrompt = null; } else { alert('PWA install not available. To enable installation, host the site over HTTPS or open via localhost.'); } });
+
+// Notifications
+document.getElementById('notifyBtn').addEventListener('click', async ()=>{
+  if(!('Notification' in window)){ alert('Notifications not supported'); return; }
+  const perm = await Notification.requestPermission();
+  if(perm==='granted'){ scheduleTodayNotifications(); alert('Notifications enabled (will appear while this page is open).'); } else alert('Notification permission denied'); 
+});
+
+function scheduleTodayNotifications(){
+  const today = todayKey();
+  const due = db.notes.filter(n=>n.nextReview && n.nextReview <= today);
+  due.forEach((n,i)=>{
+    setTimeout(()=>{
+      new Notification('Lakshya — Revision due', { body: n.title, tag: n.id });
+    }, i*2000 + 500); // stagger small
+  });
+}
+
+// Smart spaced repetition: same doubling logic, but ensure nextReview exists
+function markReviewed(id, action){
+  const n = db.notes.find(x=>x.id===id); if(!n) return;
+  const today = todayKey();
+  if(action==='good'){ n.interval = (n.interval||1)*2; } else { n.interval = 1; }
+  n.nextReview = today + n.interval*24*60*60*1000;
+  n.updated = Date.now();
+  save();
+}
+
+// sample data
+function ensureSample(){ if(!db.subjects || db.subjects.length===0){ db.subjects = [{id:uid(),name:'Mathematics'},{id:uid(),name:'Science'}]; save(); } }
+
+// Navigation & pages
+const tabs = document.querySelectorAll('.tab');
+const pages = { home:document.getElementById('pageHome'), notes:document.getElementById('pageNotes'), revision:document.getElementById('pageRevision'), timetable:document.getElementById('pageTimetable') };
+tabs.forEach(t=> t.addEventListener('click', ()=>{ tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active'); const p = t.getAttribute('data-page'); Object.values(pages).forEach(pg=>{ pg.style.display='none'; pg.classList.remove('show'); }); pages[p].style.display='block'; setTimeout(()=> pages[p].classList.add('show'),20); if(p==='notes') renderNotes(); if(p==='revision') renderRevision(); if(p==='timetable') renderTimetable(); }));
+document.querySelectorAll('[data-goto]').forEach(b=> b.addEventListener('click', (e)=>{ const p = e.target.getAttribute('data-goto'); document.querySelector('.tab[data-page=\"'+p+'\"]').click(); }));
+
+// DOM refs
+const subjectsList = document.getElementById('subjectsList');
+const subjectInput = document.getElementById('subjectInput');
+const addSubjectBtn = document.getElementById('addSubjectBtn');
+const subjectSelect = document.getElementById('subjectSelect');
+const newNoteBtn = document.getElementById('newNoteBtn');
+const noteEditor = document.getElementById('noteEditor');
+const noteTitle = document.getElementById('noteTitle');
+const noteBody = document.getElementById('noteBody');
+const noteTags = document.getElementById('noteTags');
+const reviewInterval = document.getElementById('reviewInterval');
+const noteStrength = document.getElementById('noteStrength');
+const notesList = document.getElementById('notesList');
+const searchInput = document.getElementById('searchInput');
+const dueList = document.getElementById('dueList');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const pdfNotesBtn = document.getElementById('pdfNotesBtn');
+const pdfTimetableBtn = document.getElementById('pdfTimetableBtn');
+const pdfSingleNoteBtn = document.getElementById('pdfSingleNoteBtn');
+const addSlotBtn = document.getElementById('addSlotBtn');
+const slotsDiv = document.getElementById('slots');
+const dayButtons = document.querySelectorAll('.dayBtn');
+const revisionList = document.getElementById('revisionList');
+const allFilterBtn = document.getElementById('allFilter');
+const weakFilterBtn = document.getElementById('weakFilter');
+const strongFilterBtn = document.getElementById('strongFilter');
+const themeToggle = document.getElementById('themeToggle');
+
+let editingNoteId = null;
+let currentFilter = 'all';
+let currentDay = 0;
+
+// render functions
+function renderAll(){ renderSubjects(); renderNotes(); renderDue(); renderRevision(); renderTimetable(); }
+function renderSubjects(){
+  subjectsList.innerHTML=''; subjectSelect.innerHTML = '<option value=\"\">-- Select subject --</option>';
+  db.subjects.forEach(s=>{
+    const d = document.createElement('div'); d.className='item'; d.innerHTML = `<div style=\"display:flex;justify-content:space-between;align-items:center\"><div>${escapeHtml(s.name)}</div><div><button class=\"icon-btn\" data-id=\"${s.id}\">🗑</button></div></div>`;
+    subjectsList.appendChild(d);
+    const o = document.createElement('option'); o.value = s.id; o.textContent = s.name; subjectSelect.appendChild(o);
+  });
+  subjectsList.querySelectorAll('button[data-id]').forEach(b=> b.addEventListener('click', ()=>{ const id=b.getAttribute('data-id'); if(confirm('Delete subject and its notes?')){ db.notes = db.notes.filter(n=>n.subjectId!==id); db.subjects = db.subjects.filter(s=>s.id!==id); save(); } }));
+}
+
+function renderNotes(){
+  notesList.innerHTML='';
+  const q = (searchInput.value||'').toLowerCase();
+  const sid = subjectSelect.value;
+  db.notes.filter(n=>{
+    if(sid && n.subjectId!==sid) return false;
+    if(currentFilter==='weak' && n.strength!=='weak') return false;
+    if(currentFilter==='strong' && n.strength!=='strong') return false;
+    if(q){ return n.title.toLowerCase().includes(q) || n.body.toLowerCase().includes(q) || (n.tags||[]).join(' ').toLowerCase().includes(q); }
+    return true;
+  }).sort((a,b)=>b.updated - a.updated).forEach(n=>{
+    const d = document.createElement('div'); d.className='item';
+    const tag = n.strength==='weak'?'<span class=\"tag weak\">Weak</span>': n.strength==='strong'?'<span class=\"tag strong\">Strong</span>':'';
+    const next = n.nextReview?formatDate(n.nextReview):'—';
+    d.innerHTML = `<div style=\"display:flex;justify-content:space-between\"><div><strong>${escapeHtml(n.title)}</strong> ${tag}<div class=\"meta\">${getSubjectName(n.subjectId)} · Next: ${next}</div><div style=\"margin-top:8px\">${escapeHtml(n.body).replace(/\\n/g,'<br>')}</div></div><div style=\"display:flex;flex-direction:column;gap:8px\"><button class=\"icon-btn\" data-edit=\"${n.id}\">Edit</button><button class=\"icon-btn\" data-del=\"${n.id}\">Delete</button><button class=\"btn\" data-review=\"${n.id}\">Reviewed</button></div></div>`;
+    notesList.appendChild(d);
+  });
+  notesList.querySelectorAll('button[data-edit]').forEach(b=> b.addEventListener('click', ()=> startEdit(b.getAttribute('data-edit'))));
+  notesList.querySelectorAll('button[data-del]').forEach(b=> b.addEventListener('click', ()=>{ if(confirm('Delete note?')){ db.notes = db.notes.filter(x=>x.id!==b.getAttribute('data-del')); save(); } }));
+  notesList.querySelectorAll('button[data-review]').forEach(b=> b.addEventListener('click', ()=> markReviewed(b.getAttribute('data-review'),'good')));
+  renderDue();
+}
+
+function renderDue(){
+  dueList.innerHTML='';
+  const today = todayKey();
+  const due = db.notes.filter(n=>n.nextReview && n.nextReview <= today);
+  if(due.length===0){ dueList.innerHTML='<div class=\"small\">None for today</div>'; return; }
+  due.forEach(n=>{
+    const d = document.createElement('div'); d.className='item'; d.innerHTML = `<div><strong>${escapeHtml(n.title)}</strong><div class=\"meta\">${getSubjectName(n.subjectId)}</div></div>`;
+    dueList.appendChild(d);
+  });
+}
+
+function startEdit(id){ const n = db.notes.find(x=>x.id===id); if(!n) return; editingNoteId = id; subjectSelect.value = n.subjectId; noteTitle.value = n.title; noteBody.value = n.body; noteTags.value = (n.tags||[]).join(','); reviewInterval.value = n.interval?String(n.interval):'1'; noteStrength.value = n.strength||'normal'; noteEditor.style.display='block'; }
+
+// revision
+function renderRevision(){
+  revisionList.innerHTML='';
+  const today = todayKey();
+  const due = db.notes.filter(n=>n.nextReview && n.nextReview <= today);
+  if(due.length===0){ revisionList.innerHTML = '<div class=\"small\">No revisions today</div>'; return; }
+  due.forEach(n=>{
+    const d = document.createElement('div'); d.className='item'; const tag = n.strength==='weak'?'<span class=\"tag weak\">Weak</span>': n.strength==='strong'?'<span class=\"tag strong\">Strong</span>':'';
+    d.innerHTML = `<div style=\"display:flex;justify-content:space-between\"><div><strong>${escapeHtml(n.title)}</strong> ${tag}<div class=\"meta\">${getSubjectName(n.subjectId)}</div></div><div style=\"display:flex;flex-direction:column;gap:8px\"><button class=\"btn\" onclick=\"markReviewed('${n.id}','good')\">Mark Done</button><button class=\"icon-btn\" onclick=\"markReviewed('${n.id}','again')\">Again</button></div></div>`;
+    revisionList.appendChild(d);
+  });
+}
+
+// timetable
+function renderTimetable(){
+  slotsDiv.innerHTML='';
+  const slots = db.timetable[currentDay] || [];
+  if(slots.length===0){ slotsDiv.innerHTML = '<div class=\"small\">No slots. Add one.</div>'; return; }
+  slots.forEach((s,i)=>{
+    const el = document.createElement('div'); el.className='item'; el.innerHTML = `<div style=\"display:flex;justify-content:space-between;align-items:center\"><div><strong>${s.start} → ${s.end}</strong><div class=\"meta\">${escapeHtml(s.title)}</div></div><div style=\"display:flex;flex-direction:column;gap:8px\"><button class=\"icon-btn\" onclick=\"editSlot(${currentDay},${i})\">Edit</button><button class=\"icon-btn\" onclick=\"deleteSlot(${currentDay},${i})\">Delete</button></div></div>`;
+    slotsDiv.appendChild(el);
+  });
+}
+document.querySelectorAll('.dayBtn').forEach(b=> b.addEventListener('click', ()=>{ currentDay = parseInt(b.getAttribute('data-day'),10); document.querySelectorAll('.dayBtn').forEach(x=>x.style.opacity=1); b.style.opacity=0.7; renderTimetable(); }));
+addSlotBtn.addEventListener('click', ()=>{
+  const title = prompt('Title (e.g. Maths - Revision)'); if(!title) return;
+  const start = prompt('Start time (HH:MM)','07:00'); if(!start) return;
+  const end = prompt('End time (HH:MM)','08:00'); if(!end) return;
+  db.timetable[currentDay].push({title, start, end}); save();
+});
+function editSlot(day,i){ const s = db.timetable[day][i]; const t = prompt('Title', s.title); if(t!==null) s.title = t; const st = prompt('Start', s.start); if(st!==null) s.start = st; const en = prompt('End', s.end); if(en!==null) s.end = en; save(); renderTimetable(); }
+function deleteSlot(day,i){ if(!confirm('Delete slot?')) return; db.timetable[day].splice(i,1); save(); renderTimetable(); }
+
+// filters/search/export/import/pdf
+searchInput.addEventListener('input', renderNotes);
+allFilterBtn.addEventListener('click', ()=>{ currentFilter='all'; renderNotes(); });
+weakFilterBtn.addEventListener('click', ()=>{ currentFilter='weak'; renderNotes(); });
+strongFilterBtn.addEventListener('click', ()=>{ currentFilter='strong'; renderNotes(); });
+
+exportBtn.addEventListener('click', ()=>{ const blob = new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lakshya_backup.json'; a.click(); URL.revokeObjectURL(a.href); });
+
+importBtn.addEventListener('click', ()=>{ const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = ()=>{ const f = input.files[0]; if(!f) return; const r = new FileReader(); r.onload = ()=>{ try{ db = JSON.parse(r.result); save(); alert('Imported'); }catch(e){ alert('Invalid file'); } }; r.readAsText(f); }; input.click(); });
+
+// PDF export via formatted print
+function openPrintWindow(htmlContent, title){
+  const w = window.open('', '_blank');
+  const css = `body{font-family:Arial,Helvetica,sans-serif;padding:20px;color:#111} h1{color:#0b1220}`;
+  w.document.write(`<html><head><title>${title}</title><style>${css}</style></head><body>${htmlContent}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(()=> w.print(), 500);
+}
+
+pdfNotesBtn.addEventListener('click', ()=>{
+  const notesHtml = db.notes.map(n=>`<h2>${escapeHtml(n.title)}</h2><p><em>${getSubjectName(n.subjectId)} · ${n.strength||'Normal'} · Next: ${formatDate(n.nextReview)}</em></p><p>${escapeHtml(n.body).replace(/\\n/g,'<br>')}</p><hr>`).join('');
+  const html = `<h1>Lakshya — Notes Export</h1>${notesHtml}`;
+  openPrintWindow(html, 'Lakshya Notes');
+});
+
+pdfTimetableBtn.addEventListener('click', ()=>{
+  let html = `<h1>Lakshya — Timetable</h1>`;
+  db.timetable.forEach((day,idx)=>{
+    html += `<h3>${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][idx]}</h3>`;
+    if(day.length===0) html += `<p>No slots</p>`;
+    else day.forEach(s=> html += `<p><strong>${s.start} - ${s.end}</strong> — ${escapeHtml(s.title)}</p>`);
+  });
+  openPrintWindow(html, 'Lakshya Timetable');
+});
+
+pdfSingleNoteBtn.addEventListener('click', ()=>{
+  if(!editingNoteId){ alert('Open a note in editor first'); return; }
+  const n = db.notes.find(x=>x.id===editingNoteId); if(!n) return;
+  const html = `<h1>${escapeHtml(n.title)}</h1><p><em>${getSubjectName(n.subjectId)} · ${n.strength||'Normal'} · Next: ${formatDate(n.nextReview)}</em></p><p>${escapeHtml(n.body).replace(/\\n/g,'<br>')}</p>`;
+  openPrintWindow(html, 'Note');
+});
+
+// add subject & quick enter
+addSubjectBtn.addEventListener('click', ()=>{ const name = (subjectInput.value||'').trim(); if(!name) return alert('Enter subject name'); db.subjects.push({id:uid(),name}); save(); subjectInput.value=''; });
+subjectInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') addSubjectBtn.click(); });
+
+// notes editor
+newNoteBtn.addEventListener('click', ()=>{ if(!subjectSelect.value){ alert('Select a subject first'); return; } editingNoteId=null; noteTitle.value=''; noteBody.value=''; noteTags.value=''; reviewInterval.value='1'; noteStrength.value='normal'; noteEditor.style.display='block'; });
+document.getElementById('saveNoteBtn').addEventListener('click', ()=>{
+  const sid = subjectSelect.value; if(!sid){ alert('Select subject'); return; }
+  const now = Date.now(); const interval = parseInt(reviewInterval.value||1,10);
+  if(editingNoteId){ const n = db.notes.find(x=>x.id===editingNoteId); n.title = noteTitle.value; n.body = noteBody.value; n.tags = (noteTags.value||'').split(',').map(t=>t.trim()).filter(Boolean); n.strength = noteStrength.value; n.updated = now; } else { const id = uid(); db.notes.push({ id, subjectId: sid, title: noteTitle.value, body: noteBody.value, tags: (noteTags.value||'').split(',').map(t=>t.trim()).filter(Boolean), created: now, updated: now, strength: noteStrength.value, interval, nextReview: Date.now() + interval*24*60*60*1000 }); }
+  save(); noteEditor.style.display='none'; renderNotes();
+});
+document.getElementById('cancelNoteBtn').addEventListener('click', ()=>{ noteEditor.style.display='none'; });
+
+// helpers
+function getSubjectName(id){ const s = db.subjects.find(x=>x.id===id); return s? s.name : '—'; }
+
+// Start / init
+function start(){ load(); ensureSample(); renderAll(); // focus search on '/'
+  window.addEventListener('keydown', (e)=>{ if(e.key==='/' && document.activeElement.tagName!=='INPUT' && document.activeElement.tagName!=='TEXTAREA'){ e.preventDefault(); searchInput.focus(); } });
+  // default to home
+  document.querySelector('.tab[data-page=\"home\"]').click();
+  // try registering service worker (best-effort)
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').then(()=> console.log('SW registered')).catch(()=> console.log('SW failed'));
+  }
+}
+start();
+
+// Expose markReviewed globally for buttons inside generated elements
+window.markReviewed = markReviewed;
+
+</script>
+
+<!-- Service worker and manifest are referenced but when running from file:// they won't register.
+     They are included as placeholders for hosting on HTTPS. Below we provide simple manifest content as a data URL fallback. -->
+<script>
+// Create a simple manifest blob and point the manifest link to it so some browsers read it when possible
+const manifest = {
+  "name":"Lakshya Website Pro",
+  "short_name":"Lakshya",
+  "start_url":"./index.html",
+  "display":"standalone",
+  "background_color":"#071129",
+  "theme_color":"#071129",
+  "icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192'><rect width='100%' height='100%' rx='30' fill='%2306b6d4'/><text x='50%' y='55%' font-size='90' text-anchor='middle' fill='%23031025' font-family='Arial' font-weight='700'>L</text></svg>","sizes":"192x192","type":"image/svg+xml"}]
+};
+const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+document.getElementById('manifest-link').href = URL.createObjectURL(blob);
+</script>
+
+</body>
+</html>
